@@ -1,0 +1,97 @@
+﻿
+@{
+    ViewBag.Title = "Compare";
+    Layout = null;
+}
+
+<h2>Compare</h2>
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html lang="en-CA" dir="ltr">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta http-equiv="Content-Style-Type" content="text/css" />
+    <meta http-equiv="Content-Script-Type" content="text/javascript" />
+    <title>Comparing Heights</title>
+    <style>
+        h1 {
+            text-align: center;
+        }
+
+        #Content {
+            display: table;
+            width: 100%;
+            margin: auto;
+        }
+
+        #Show_Sizes, #Set_Sizes {
+            display: table-cell;
+            width: 50%;
+            border: 1px solid black;
+        }
+
+        #Show_Sizes {
+            text-align: center;
+            vertical-align: middle;
+        }
+
+        #Set_Sizes {
+            vertical-align: top;
+        }
+
+        input[type='text'] {
+            width: 3em;
+        }
+
+        input[type='button'] {
+            width: 100%;
+            font-size: 150%;
+        }
+
+        #Compare_URL {
+            width: 30em;
+        }
+    </style>
+
+</head>
+<body>
+    <h1>Comparing Heights</h1>
+    <div id="Content">
+        <div id="Show_Sizes">
+            <img src="~/Content/manoutline.jpg" alt="human outline" id="BaseSize">
+            <img src="~/Content/womanoutline.jpg" alt="human outline" id="CompSize">
+        </div>
+
+        <form id="Set_Sizes" action="">
+            <fieldset>
+                <legend>Left Figure</legend><ul>
+                    <li><label><input type="text" name="base_ft" value="6"> Feet</label></li>
+                    <li><label><input type="text" name="base_in" value="0"> Inches</label></li>
+                    <li>Gender:
+                        <label><input type="radio" name="base_gn" value="man" checked="checked">Male</label>
+                        <label><input type="radio" name="base_gn" value="woman">Female</label>
+                        
+                    </li>
+                </ul>
+            </fieldset>
+            <fieldset>
+                <legend>Right Figure</legend><ul>
+                    <li><label><input type="text" name="comp_ft" value="6"> Feet</label></li>
+                    <li><label><input type="text" name="comp_in" value="0"> Inches</label></li>
+                    <li> Gender:
+                        <label><input type="radio" name="comp_gn" value="man" checked="checked">Female</label>
+                        <label><input type="radio" name="comp_gn" value="woman">Male</label>
+                       
+                    </li>
+                </ul>
+            </fieldset>
+            <input type='button' value="Compare!" name="compare">
+            <label>Link to Comparison: <input type="text" name="url" id="Compare_URL"></label>
+            <script type="text/javascript" src="~/scripts/Sizes.js">
+            </script>
+        </form>
+    </div>
+
+</body>
+</html>

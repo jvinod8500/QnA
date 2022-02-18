@@ -1,0 +1,112 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Discussions</title>
+    <link href="~/Content/Site.css" rel="stylesheet" type="text/css" />
+    <link href="~/Content/bootstrap.min.css" rel="stylesheet" type="text/css" />
+    <link href="~/Content/font-awesome.min.css" rel="stylesheet" />
+    <link href="~/Content/jquery-ui.min.css" rel="stylesheet" />
+    @*<link href="~/Content/Notifications.css" rel="stylesheet" />*@
+    <script src="~/Scripts/modernizr-2.6.2.js"></script>
+    <script src="~/Scripts/jquery3.3.1.min.js"></script>
+    <script src="~/Scripts/bootstrap.min.js"></script>
+    <script src="~/Scripts/jquery-ui-1.12.1.min.js"></script>
+    <script src="~/Scripts/jquery.twbsPagination.min.js"></script>
+    <style>
+        #loadercontainer {
+            position: fixed;
+            background: rgba(0, 0, 0, 0);
+            z-index: 100;
+            width: 100%;
+            height: 100%;
+            display: none;
+        }
+
+        .dropdown-menu {
+            margin-left: 14%;
+        }
+
+            .dropdown-menu > li > a {
+                white-space: unset !important;
+                padding: 3px 6px;
+            }
+
+        .notification-box > span {
+            white-space: normal;
+            word-wrap: break-word;
+        }
+        .filter{
+                font-size: 15px!important   ;
+        }
+        @@media screen and (max-width: 768px) {
+            .dropdown-menu {
+                margin-left: 30%;
+            }
+        }
+
+        .nav-item > select {
+            font-size: 10px;
+            width: 142px;
+            background: #343148 !important;
+            outline:none;
+            border:none;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="loadercontainer">
+        <img style="top: 40%;left: 45%;position: fixed;" src="~/Content/loader.gif" />
+    </div>
+    <div class="navbar navbar-inverse navbar-fixed-top" style="background:#343148">
+        <div class="container">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a id="refresh" class="navbar-brand" href="#"><i class="fa fa-refresh"></i>Refresh</a>
+                <a class="navbar-brand" style="display:inherit!important" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    <i style="color:#fff" class="fa fa-bell"><span style="color:orangered" id="noticount"></span></i>
+                </a>
+                <ul class="dropdown-menu">
+                    <li id="notifooter">
+                        <div class="notify-drop-footer text-center">
+                            <a id="noticlear" href="#"><i class="fa fa-trash-alt" style="font-size: small;"></i>Clear</a>
+                        </div>
+                    </li>
+                </ul>
+                @*<a class="filter navbar-brand" href="#">Today</a>
+                <a class="filter navbar-brand" href="#">Yesterday</a>
+                <a class="filter navbar-brand" href="#">This Week</a>
+                <a class="filter navbar-brand" href="#">All</a>*@
+            </div>
+            <div class="navbar-collapse collapse">
+                <ul class="nav navbar-right navbar-nav">
+                    <li class="nav-item"><select id="qntypefilter" class="navbar-brand"><option>--Select Qn Type--</option></select></li>
+                    <li class="nav-item"><a class="filter navbar-brand" href="#">Today</a></li>
+                    <li class="nav-item"><a class="filter navbar-brand" href="#">Yesterday</a></li>
+                    <li class="nav-item"><a class="filter navbar-brand" href="#">This Week</a></li>
+                    <li class="nav-item"><a class="filter navbar-brand" href="#">All</a></li>
+                    <li class="nav-item"><a id="postqnid" class="navbar-brand" href="#">Post Question</a></li>
+                    <li class="nav-item"><a id="noteid" class="navbar-brand" href="/Qna/Notes">Notes</a></li>
+                    <li class="nav-item"><a class="navbar-brand" href="/QnA/Logout">Logout</a></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <div class="container body-content">
+        @RenderBody()
+        @RenderSection("scripts", false)
+        <hr />
+        <footer style="bottom: 2px;position: fixed;display:none">
+            <p>&copy; Copy Reserved</p>
+        </footer>
+    </div>
+
+</body>
+</html>

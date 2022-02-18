@@ -1,0 +1,402 @@
+﻿@{
+    Layout = null;/* "~/Views/Shared/_Layout.cshtml"*/
+}
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sticky Notes</title>
+    <link href="~/Content/fontawesome.css" rel="stylesheet" />
+    <style>
+         @@import url(https://fonts.googleapis.com/css?family=Gloria+Hallelujah);
+
+         * {
+             box-sizing: border-box;
+         }
+
+         body {
+             background: url(../../Content/little_pluses2.png) #cacaca;
+             margin: 30px;
+         }
+         /*#loading-image{
+             position:absolute;
+             top:30%;
+             left:40%;
+             z-index:100;
+             width:100%;
+             display:none;
+
+        }*/
+         #loading {
+             opacity: .5;
+             filter: alpha(opacity=50);
+         }
+
+         #loading-image {
+             position: absolute;
+             z-index: 100;
+             display: none;
+         }
+
+         @@media only screen and (max-width: 768px) {
+             /* For mobile phones: */
+             #loading-image {
+                 width: 300px;
+             }
+         }
+
+         textarea {
+             float: left;
+             padding: 25px 25px 40px;
+             margin: 0 20px 20px 0;
+             width: 270px;
+             height: 250px;
+         }
+
+         span {
+             margin-top: 60px;
+             float: left;
+             background: #F8EC9D;
+             margin: 10px 0px 0px 10px;
+             width: 280px;
+             padding: 3px 0 0 0;
+         }
+
+         #save {
+             text-align: center;
+             cursor: pointer;
+             text-decoration: none;
+         }
+
+         .fa-times-circle {
+             cursor: pointer;
+             color: red;
+             margin: 0px 0px 0px 0px;
+             font-size: 18px;
+         }
+
+         .fa-arrow-circle-up {
+             cursor: pointer;
+             font-size: 18px;
+             margin: 0px 5px 0px 5px;
+         }
+
+
+
+         #create {
+             /*user-select:none;
+         padding:20px;
+         border-radius:20px;
+         text-align:center;
+         border:15px solid rgba(0,0,0,0.1);
+         cursor:pointer;
+         color:rgba(0,0,0,0.1);
+         font:220px "Helvetica", sans-serif;
+         line-height:185px;*/
+             text-align: center;
+             cursor: pointer;
+             text-decoration: none;
+         }
+
+         #emailname {
+             font-size: 20px;
+             margin: 10px;
+         }
+
+         .modal-dialog {
+             width: 350px !important;
+         }
+
+         .modal-footer {
+             margin: 0 !important;
+         }
+
+         span > input {
+             padding-left: 2px;
+             outline: none;
+             border: none;
+             border-bottom: groove;
+             background: #F8EC9D;
+         }
+
+         #email {
+             outline: none;
+             border: none;
+             border-bottom: groove;
+             width: 100%;
+         }
+
+         textarea {
+             font: 20px;
+             line-height: 1.5;
+             border: 0;
+             border-radius: 3px;
+             background: linear-gradient(#F9EFAF, #F7E98D);
+             box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+             overflow: hidden;
+             transition: box-shadow 0.5s ease;
+             font-smoothing: subpixel-antialiased;
+             max-width: 520px;
+             max-height: 250px;
+         }
+
+         #notesarea {
+             margin-top: 25px;
+         }
+
+         textarea:hover {
+             box-shadow: 0 5px 8px rgba(0,0,0,0.15);
+         }
+
+         textarea:focus {
+             box-shadow: 0 5px 12px rgba(0,0,0,0.2);
+             outline: none;
+         }
+    </style>
+    <style>
+        .navbar {
+            overflow: hidden;
+            background-color: #333;
+            font-family: Arial, Helvetica, sans-serif;
+        }
+
+            .navbar a {
+                float: left;
+                font-size: 16px;
+                color: white;
+                text-align: center;
+                padding: 14px 16px;
+                text-decoration: none;
+            }
+
+        .dropdown {
+            float: left;
+            overflow: hidden;
+        }
+
+            .dropdown .dropbtn {
+                font-size: 16px;
+                border: none;
+                outline: none;
+                color: white;
+                padding: 14px 16px;
+                background-color: inherit;
+                font-family: inherit;
+                margin: 0;
+            }
+
+            .navbar a:hover, .dropdown:hover .dropbtn {
+                background-color: white;
+            }
+
+        /*.dropdown-content {
+            display: none;
+            position: absolute;
+            background-color: #f9f9f9;
+            min-width: 160px;
+            box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+            z-index: 1;
+        }
+
+            .dropdown-content a {
+                float: none;
+                color: black;
+                padding: 12px 16px;
+                text-decoration: none;
+                display: block;
+                text-align: left;
+            }
+
+                .dropdown-content a:hover {
+                    background-color: #ddd;
+                }
+
+        .dropdown:hover .dropdown-content {
+            display: block;*/
+        }
+    </style>
+    <script src="~/Scripts/jquery3.3.1.min.js"></script>
+    <script src="~/scripts/bootstrap.js"></script>
+    <link href="~/Content/bootstrap.css" rel="stylesheet" />
+
+</head>
+<body>
+    @*//on-load pop-up*@
+    <!-- Modal -->
+    <button hidden data-toggle="modal" data-target="#myModal" id="loginid" type="submit">Login</button>
+    <div id="myModal" class="modal fade" role="dialog">
+        <div class="modal-dialog">
+
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">Authorization..</h4>
+                </div>
+                <div class="modal-body">
+                    <form>
+                        <input id="email" type="email" placeholder="Enter your id.." />
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal" id="submit">Login</button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal" id="close">Or Continue as Guest</button>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <div class="navbar">
+        <a id="weltxt" href="#"></a>
+        <a id="create" class='text-center'><i style="font-size:16px;" class="fa fa-plus-circle"></i>Add</a>
+        <a id="loginout" class='pull-right' href='/Blob/StickyNotes'></a>
+        <a class='pull-right' href='/Blob/Upload'><i style="font-size:22px" class='fa fa-home'>&emsp;</i></a>
+        <a id="save" class='pull-right'>Save</a>
+
+
+    </div>
+    <div class="container" style="top:100px">
+        <div id="loading">
+            <img style="color:#0026ff" id="loading-image" src="~/Content/loader-gif-transparent.gif" alt="Loading..." />
+        </div>
+        @*<div class="text-center">
+                <a id="create">+</a>&emsp;&emsp;&emsp;&emsp;
+                <a href="#" id="save">Save</a>
+            </div>*@
+        <div>
+            <b>Note : Click Plus icon on top to add New Note &nbsp; <i class='fa fa-arrow-circle-up'></i>- Use this to update the Note&nbsp;<i class='fa fa-times-circle'></i>- Use this to delete the Note And after adding click on SAVE button.</b>
+        </div>
+        <div id="notesarea"></div>
+
+    </div>
+
+</body>
+</html>
+
+<script>
+    $.ajaxSetup({
+        async: false
+    });
+    var i = 0; var data = []; var owner;
+    $("#create").click(function () {
+        $('#notesarea').prepend("<span><b>Title:</b><input class='stitle' type='text'/><i class='fa fa-times-circle'></i><textarea class='stext'></textarea></span>");
+    });
+     +
+    $('#save').click(function () {
+        debugger
+        $('#loading-image').show();
+        var collection = $(".stext");
+        $(".stitle").each(function (i, n) {
+
+            data.push({ Title: n.value, Text: collection[i].value, Lock: true, Owner: owner });
+        });
+        if (data.length == 0)
+        {
+            alert('Please Add New One first!!');
+            $('#loading-image').hide();
+            return
+        }
+        else{
+        var records = JSON.stringify(data);
+        $.ajax({
+            contentType: 'application/json; charset=utf-8',
+            dataType: 'json',
+            type: 'POST',
+            url: "/Blob/SaveStickyNotes",
+            data: records
+        }).done(function (state) {
+
+            if (state) {
+                alert('saved');
+                data = [];
+                $.get('/Blob/GetStickyNotes?owner=' + owner, function (data) {
+
+                    $("#notesarea").html('');
+                    $.each(data, function (i, n) {
+
+                        $("#notesarea").append("<span id='span" + n.StickyId + "'><b>Title:</b><input class='existtitle' type='text' value=" + n.Title + "><i class='fa fa-arrow-circle-up'></i><i class='fa fa-times-circle'></i><textarea class='existtext'>" + n.Text + "</textarea></span>");
+                    })
+                    $('#loading-image').hide();
+                });
+            }
+        }).fail(function () {
+            alert('Failed');
+        });
+        }
+    }
+
+    )
+     $('#loginid').trigger('click');
+     $('#submit,#close,.close').click(function () {
+
+         $('#loading-image').show();
+         owner = $('#email').val();
+         if (owner == "") {
+             owner = 'User';
+             $('#weltxt').html('Welcome, ' + owner + " !!")
+             $('#loginout').html('Login');
+         }
+         else {
+             $('#weltxt').html('Welcome, ' + owner + " !!");
+             $('#loginout').html('Logout');
+         }
+         $.get('/Blob/GetStickyNotes?owner='+owner, function (data) {
+
+             if (data.length == 0) {
+                 alert('No Sticky Notes found. Please add!!');
+             }
+             else
+             $.each(data, function (i, n) {
+                  debugger
+                 $("#notesarea").append("<span id='span" + n.StickyId + "'><b>Title:</b><input class='existtitle' type='text' value=" + n.Title + "><i class='fa fa-arrow-circle-up'></i><i class='fa fa-times-circle'></i><textarea class='existtext'>" + n.Text + "</textarea></span>");
+             })
+             $('#loading-image').hide();
+         });
+     });
+     $('#notesarea').on('click', '.fa-times-circle', function () {
+         debugger
+         if(confirm("Are you sure?"))
+         {
+             $('#loading-image').show();
+             var id = $(this)[0].parentElement.id;
+             if (id == "")
+             {
+                 $(this)[0].parentElement.remove();
+             }
+             else
+             $.post('/Blob/DeleteStickyNote?id=' + id.split('span')[1], null, function (status) {
+                 if (status) {
+                     alert('Deleted');
+                     $("#" + id).remove();
+                 }
+                 else if (data == "Exists") {
+                     alert('Point exists');
+                 }
+             })
+             $('#loading-image').hide();
+         }
+     })
+     $('#notesarea').on('click', '.fa-arrow-circle-up', function () {
+         debugger
+         if (confirm("Are you sure?")) {
+             $('#loading-image').show();
+             var span = $(this)[0].parentElement;
+             var record = {
+                 StickyId: span.id.split('span')[1],
+                 Text: span.lastElementChild.value,
+                 Title: span.children[1].value
+             }
+             $.post('/Blob/UpdateStickyNote', record, function (status) {
+                 if (status) {
+                     alert('Updated');
+                 }
+                 else {
+                     alert('Fail to update');
+                 }
+             })
+             $('#loading-image').hide();
+         }
+     })
+
+</script>

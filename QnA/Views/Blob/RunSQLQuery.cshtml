@@ -1,0 +1,240 @@
+﻿
+@{
+    ViewBag.Title = "RunQuery";
+    Layout = "~/Views/Shared/_ModernLayout.cshtml";
+}
+<style>
+    #viewqueriespop_wrapper{top:5%!important}
+    .logininput{
+        border:none;
+        border-bottom:1px groove;
+        outline:none;
+        width:250px;
+        margin:10px;
+    }
+</style>
+<h4>Run Query</h4><a href="#" id="viewqueries">View saved Queries</a>
+<input style="width:90%" id="constr" value="Data Source=Selfservices.database.windows.net;Initial Catalog=OneSourceDataLake;User id='sqllogin';Password='Infy123+'" />&emsp;<button class="button" id="sqlcheck">Check</button><br />
+<textarea placeholder="Query.." id="query" cols="100" rows="6" style="width:100%"></textarea><br />
+<button class="button" id="execute">Run</button>
+<span id="result"></span>
+<br />
+<div id="griddiv"></div>
+<div id="viewqueriespop"  title="Queries">
+    <div id="QueriesGrid"></div>
+    <div id="template" style="display: none">
+                <table>
+                    <tr>
+                        <td>
+                            Private<input type="checkbox" name="Public" value="public">
+                        </td>
+                        <td id="pindiv" style="display:none;text-align: left">
+                            <input id="owner" disabled name="Owner"  /> <input id="pin"  disabled name="Pin" />
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="text-align: right;">
+                            Query
+                        </td>
+                        <td style="text-align: left">
+                            <textarea id="command" rows="5" name="Command" value="{{: Command}}" style="width:950px;padding:0!important"></textarea>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+
+</div>
+<div id="QueryLogin" style="display:none" title="Login">
+ <table>
+            <tr>
+                <td  style="text-align: right;">
+                    LoginId &emsp;
+                </td>
+                <td  style="text-align: left;">
+                    <input id="lowner" name="Owner" placeholder="UserId" class="logininput" /> 
+                </td>
+            </tr>
+  
+            <tr>
+                <td style="text-align: right;">
+                    Pin &emsp;
+                </td>
+                <td style="text-align: left">
+                    <input id="lpin" name="Pin" class="logininput" placeholder="PIN" />
+                </td>
+            </tr>
+        </table>
+    <hr />
+    <button class="button" id="querylgnbtn">Login</button>
+    <br />
+    <br />
+ </div>
+<script>
+    var Owner, Pin;
+    $(function () {
+        debugger
+        if ('@ViewBag.Owner' == "null") {
+            $('#QueryLogin').ejDialog("open");
+        }
+        else {
+            Owner = '@ViewBag.Owner';
+            Pin = '@ViewBag.Pin';
+            $('#owner').val(Owner);
+            $('#pin').val(Pin);
+        }
+    })
+    var getajaxservice = function (url) {
+        var returndata;
+        $.ajax({
+            type: 'GET',
+            url: url,
+            async: false,
+            success: function (data) {
+                debugger
+                if (data.Status)
+                    returndata = JSON.parse(data.Result);
+                else returndata = [];
+
+            },
+            error: function () {
+            }
+        })
+        return returndata;
+    }
+
+
+    $("#execute").click(function () {
+        $('#griddiv').html('');
+        $.post('/blob/ExecuteSQLQuery', { constr: $("#constr").val(), query: $("#query").val() }, function (data) {
+            debugger
+            if (data.Status) {
+                if (JSON.parse(data.Result).length == 0) $('#result').html("Query Executed!!");
+                else {
+                    $('#griddiv').append('<div id="grid"></div>');
+                    $("#grid").ejGrid({
+                        dataSource: JSON.parse(data.Result),
+                        allowPaging: true,
+                    });
+                }
+            }
+            else { $('#result').html(data.Result); }
+
+        })
+    })
+    $("#sqlcheck").click(function () {
+        debugger
+        $.post('/blob/SQLConnectionCheck/', { constr: $('#constr').val() }, function (r) {
+            if (r) {
+                $('#constr').css('border', '2px solid green');
+            }
+            else {
+                $('#constr').css('border', '2px solid red');
+            }
+        })
+    })
+    $("#viewqueries").click(function () {
+        debugger
+        $("#QueriesGrid").ejGrid({
+            dataSource: getajaxservice('/blob/GetCommands?Owner='+$('#owner').val()+'&Pin='+ $('#pin').val()),
+            allowPaging: true,
+            actionBegin: "beginAddEvent",
+            actionComplete: "CompleteAddEvent",
+            editSettings: { allowEditing: true, allowAdding: true, allowDeleting: true, editMode: "inlineformtemplate", inlineFormTemplateID: "#template" },//, formPosition: "topRight" },
+            toolbarSettings: { showToolbar: true, toolbarItems: [ej.Grid.ToolBarItems.Add, ej.Grid.ToolBarItems.Edit, ej.Grid.ToolBarItems.Delete, ej.Grid.ToolBarItems.Update, ej.Grid.ToolBarItems.Cancel] },
+            columns: [
+                { field: 'Command' },
+                { field: "CommandId", visible: false },
+                {
+                    headerText: 'Copy',
+                    commands: [
+                    { type: "copy", buttonOptions: { size: "normal", showRoundedCorner: true, heigth: '28px', width: '30px', contentType: "imageonly", prefixIcon: "e-icon e-copy", click: "copy2clipboard" } }],
+                    isUnbound: true,
+                    width: '60px',
+                    textAlign: ej.TextAlign.Center
+                }
+            ],
+            pageSettings: { pageSize: 7 },
+
+        });
+
+        $('#viewqueriespop').ejDialog("open");
+    })
+    function beginAddEvent(args) {
+        debugger
+        if (args.requestType == "save") {
+            if ($("input[name='Public']:checked").val()) {
+                if (args.data.Owner == null || args.data.Pin == null) {
+                    if (args.data.Owner == null) { $('#ownerid').focus(); }
+                    else { $('#pin').focus(); }
+                    return false;
+                }
+            }
+            if (args.data.Command == null) { $('#command').focus(); return false; }
+            $.post('/blob/SaveCommand', { q: args.data }, function (result) {
+                debugger
+            })
+        }
+    }
+
+    $("body").on('click', "input[name='Public']", function () {
+        debugger
+        if (this.checked) {
+            $('#pindiv').show();
+            $('#owner').val(Owner);
+            $('#pin').val(Pin);
+        } else {
+            $('#pindiv').hide();
+        }
+    })
+
+
+    $("#querylgnbtn").click(function () {
+        $.post('/blob/QueryLogin', { Owner: $("#lowner").val(), Pin: $("#lpin").val() }, function (data) {
+            debugger
+            if (data) {
+                $('#owner').val($("#lowner").val());
+                $('#pin').val($("#lpin").val());
+                $('#QueryLogin').ejDialog("close");
+            }
+            else { }
+
+        })
+    })
+    function copy2clipboard(args) {
+        debugger
+        var $temp = $("<input>");
+        $("body").append($temp);
+        $temp.val(args.target.closest('tr').cells[0].textContent).select();
+        document.execCommand("copy");
+        $temp.remove();
+    }
+
+    $('#QueryLogin').ejDialog({
+        enableModal: true,
+        enableResize: true,
+        showOnInit: false,
+        actionButtons: ["close"],
+        close: "onDialogClose",
+        containment: "body"
+    })
+    $('#viewqueriespop').ejDialog({
+        enableModal: true,
+        enableResize: true,
+        showOnInit: false,
+        width: "1000px",
+        heigth: "550px",
+        actionButtons: ["close", "maximize", "minimize", "collapsible"],
+        enableAnimation: true,
+        animation: {
+            show: { effect: "slide", duration: 500 },
+            hide: { effect: "fade", duration: 500 }
+        },
+        close: "onDialogClose",
+        containment: "body"
+    });
+    $(document).keydown(function (e) {
+        if (e.keyCode == 81 && e.ctrlKey) {
+            $("#execute").click();
+        }
+    });
+</script>

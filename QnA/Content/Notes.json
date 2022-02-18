@@ -1,0 +1,48 @@
+[
+  
+  {
+    "NoteId": 1,
+    "Topic": "Others",
+    "Category": null,
+    "NoteDescription": "Video",
+    "links": [ "Text" ],
+    "Owner": null,
+    "CreatedDate": "2019-02-05T20:14:36.8265804+05:30"
+  },
+  {
+    "NoteId": 2,
+    "Topic": "Others",
+    "Category": null,
+    "NoteDescription": "Human Respiratory system",
+    "links": [ "https://www.youtube.com/watch?v=kacMYexDgHg", "https://www.youtube.com/watch?v=kacMYexDgHg" ],
+    "Owner": "vinod",
+    "CreatedDate": "2019-02-05T23:05:25.7637608+05:30"
+  },
+  {
+    "NoteId": 3,
+    "Topic": "Others",
+    "Category": null,
+    "NoteDescription": "Others class3 playlist",
+    "links": [ "https://www.youtube.com/watch?v=R6DQD6oZIJU", "https://www.wikipedia.org/" ],
+    "Owner": "Mrudula",
+    "CreatedDate": "2019-02-06T10:42:09.8699774+05:30"
+  },
+  {
+    "NoteId": 4,
+    "Topic": "Others",
+    "Category": null,
+    "NoteDescription": "Preamble",
+    "links": [ "http://polityofindia.blogspot.com/2013/08/dhar-commision-jvp-committee-and-fazl.html", "https://www.youtube.com/watch?v=X20aWFvRBeM", "https://www.youtube.com/watch?v=SHqE0R5dciI", "https://www.clearias.com/citizenship/" ],
+    "Owner": "vinod",
+    "CreatedDate": "2019-02-06T23:09:28.0637311+05:30"
+  },
+  {
+    "NoteId": 5,
+    "Topic": "Aptitude",
+    "Category": null,
+    "NoteDescription": "Siddhartha wants to buy a 11000 mah powerbank on a condition that he will pay 500 rs at the time of buying, 425 rs after 1 year and 289 rs after 2 years. If the compounded interest rate is  %, then what is the present value of powerbank?",
+    "links": [ "Let the present value of powerbank = x rs. \nAfter paying 500 rs. Rest cost = (x-500) rs. \n∴ compounded amount of this cost for 1 year = (x-500) (1+)1 \n=  \nNow, rest cost after paying 425 rs. =  - 425 rs \n∴ compounded amount for next year = =  – 425]* (1+) 1 \n= – 425] rs. \nNow, after paying 289 rs. All instalments are completed, \nSo \n – 425]= 289 \n⇒17(x-500)-425*16 = 272*16 \n⇒17x – 8500 – 6800 = 4352 \n⇒17x = 19652 \n⇒x = 1156 \n⇒Present value of powerbank = 1156 rs." ],
+    "Owner": "jvinod408@gmail.com",
+    "CreatedDate": "2019-07-21T17:09:27.0465806+05:30"
+  }
+]

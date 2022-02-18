@@ -1,0 +1,817 @@
+﻿
+@{
+    ViewBag.Title = "Questions";
+}
+<style>
+    .qno {
+        font-weight: bold;
+    }
+
+    .flip {
+        transform: rotate(90deg);
+    }
+
+    #pagination-demo {
+        display: inline-block;
+        margin-bottom: 1.75em;
+    }
+
+        #pagination-demo li {
+            display: inline-block;
+        }
+
+    .fa-angle-double-down, .fa-angle-double-up {
+        font-size: x-large;
+        color: blue;
+        margin-right: 3%;
+    }
+
+    .fa-trash {
+        font-size: x-large;
+        color: red;
+        margin-right: 3%;
+    }
+
+    input[type=button] {
+        color: #fff;
+        background-color: #5cb85c;
+        border-color: #4cae4c;
+        padding: 6px 12px;
+        margin-bottom: 0;
+        cursor: pointer;
+        border: 1px solid transparent;
+        border-radius: 4px;
+    }
+
+    .notili {
+        cursor: pointer;
+        color: darkblue !important;
+    }
+
+    .sol {
+        display: none;
+        margin-left: 2%;
+        margin-top: 1%;
+    }
+
+    .simg {
+        width: 200px;
+        /*height:100px;*/
+    }
+
+    .fa-paper-plane {
+        vertical-align: sub;
+        color: blue;
+        font-size: 30px;
+        float: right;
+        margin-right: 10%;
+    }
+
+    .fa {
+        cursor: pointer;
+    }
+
+    .solcom {
+        outline: none;
+        border: 0;
+        border-bottom: 1px groove;
+    }
+
+    #qna {
+        margin-top: 20px;
+        font-size: 15px;
+        opacity: 1;
+    }
+
+    .iqn {
+        width: 200px;
+    }
+
+    .imgsol {
+        width: 200px;
+        vertical-align: bottom;
+    }
+
+    .modal-dialog {
+        width: auto !important;
+    }
+
+    .modal-body {
+        padding: 0 !important;
+        padding-left: 2px !important;
+    }
+
+    .usernamecmt {
+        font-style: italic;
+        color: steelblue;
+        font-size: 10px;
+        float: right;
+    }
+
+    .typetxt {
+        font-style: italic;
+    }
+
+    .dropdown-menu {
+        background: white !important;
+    }
+</style>
+<div id="qna">
+
+</div>
+<ul id="pagination" class="pagination-sm"></ul>
+
+<button hidden data-toggle="modal" data-target="#imagemodel" id="imagepop" type="submit"></button>
+<!--imagepopup-->
+<div id="imagemodel" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div style="height:15px">
+                <button type="button" style="opacity:1;color:red;margin-right:2%" class="close" data-dismiss="modal">close</button>
+                <a id="rotate" style="color:blue;float:right;opacity:0.5;outline:none;font:bold;cursor:pointer;padding-right:2%;">Rotate</a>
+                <a id="download" style="color:blue;float:right;opacity:0.5;outline:none;font:bold;cursor:pointer;padding-right:2%;" download><i class="fa fa-download" aria-hidden="true"></i>Download</a>
+            </div>
+            <div class="modal-body" style="margin-top:15px; max-height:none" id="modelimage">
+            </div>
+        </div>
+    </div>
+</div>
+
+<button hidden data-toggle="modal" data-target="#postqnmodel" id="postbtn" type="submit"></button>
+<!--imagepopup-->
+<div id="postqnmodel" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div style="padding:10px">
+                <button type="button" style="opacity:1;color:red" class="close" data-dismiss="modal">&times;</button>
+                <strong style="margin-left: 5%;">Post Your Question</strong>
+            </div>
+            <div class="modal-body" style="max-height:none" id="modelqn">
+                <textarea id="postqnarea" rows="6" style="width:100%; max-width: 100% !important "></textarea>
+                <h5 style="color:blue">OR</h5>
+                <input id="postimgqn" type="file" /><br />
+                <select id="qntype"><option>--Select Qn Type--</option></select>
+                <hr />
+                <button type="button" id="postqn" class="btn">POST</button><span id="ermsg"></span>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<!-- Modal -->
+<div class="modal fade" id="loginmodel" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" style="background: darkslategrey;" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content" style="width:330px;height:360px">
+            <br>
+            @*<div style="padding-right:10px">
+                    <button type="button" style="opacity:1;color:red" class="close" data-dismiss="modal">&times;</button>
+                </div>*@
+            <div class="bs-example bs-example-tabs">
+                <ul id="myTab" class="nav nav-tabs">
+                    <li class="active"><a href="#signin" data-toggle="tab">Sign In</a></li>
+                    @*<li class=""><a href="#signup" data-toggle="tab">Register</a></li>*@ @*uncomment this to enable signup for new users*@
+                </ul>
+            </div>
+            <div class="modal-body">
+                <div id="myTabContent" class="tab-content">
+                    <div class="tab-pane fade active in" id="signin">
+                        <form class="form-horizontal">
+                            <fieldset>
+                                <!-- Sign In Form -->
+                                <!-- Text input-->
+                                <div class="control-group">
+                                    <label class="control-label" for="Email">Email:</label>
+                                    <div class="controls">
+                                        <input id="LEmail" name="Email" class="form-control" type="text" placeholder="JoeSixpack@sixpacksrus.com" class="input-large" required="">
+                                    </div>
+                                </div>
+                                <!-- Password input-->
+                                <div class="control-group">
+                                    <label class="control-label" for="passwordinput">Password:</label>
+                                    <div class="controls">
+                                        <input required="" id="passwordinput" name="passwordinput" class="form-control" type="password" placeholder="********" class="input-medium">
+                                    </div>
+                                </div>
+                                <!-- Button -->
+                                <div class="control-group">
+                                    <label class="control-label" for="signin"></label>
+                                    <div class="controls">
+                                        <input id="login" type="button" value="Login" />
+                                    </div>
+                                </div>
+                            </fieldset>
+                        </form>
+                    </div>
+                    <div class="tab-pane fade" id="signup">
+                        <form class="form-horizontal">
+                            <fieldset>
+                                <!-- Sign Up Form -->
+                                <!-- Text input-->
+                                <div class="control-group">
+                                    <label class="control-label" for="Email">Email:</label>
+                                    <div class="controls">
+                                        <input id="SEmail" name="Email" class="form-control" type="text" placeholder="JoeSixpack@sixpacksrus.com" class="input-large" required="">
+                                    </div>
+                                </div>
+                                <!-- Password input-->
+                                <div class="control-group">
+                                    <label class="control-label" for="password">Password:</label>
+                                    <div class="controls">
+                                        <input id="password" name="password" class="form-control" type="password" placeholder="********" class="input-large" required="">
+                                        <em>1-8 Characters</em>
+                                    </div>
+                                </div>
+                                <!-- Text input-->
+                                <div class="control-group">
+                                    <label class="control-label" for="reenterpassword">Re-Enter Password:</label>
+                                    <div class="controls">
+                                        <input id="reenterpassword" class="form-control" name="reenterpassword" type="password" placeholder="********" class="input-large" required="">
+                                    </div>
+                                </div>
+                                <!-- Button -->
+                                <div class="control-group">
+                                    <label class="control-label" for="confirmsignup"></label>
+                                    <div class="controls">
+                                        <input id="confirmsignup" name="confirmsignup" type="button" value="SignUp" />
+                                    </div>
+                                </div>
+                            </fieldset>
+                        </form>
+                    </div>
+                </div>
+                <span style="color:red" id="loginermsg"></span>
+            </div>
+        </div>
+    </div>
+</div>
+<audio id="qnAudio">
+    <source src="~/Content/Qn.mp3" type="audio/mpeg" />
+</audio>
+<audio id="chatAudio">
+    <source src="~/Content/plucky.mp3" type="audio/mpeg" />
+</audio>
+<script>
+    var qnslist = [], loginuser,currentpage;
+    $(function () {
+        debugger
+        if ('@ViewBag.User' == "null") {
+            $('#loginmodel').modal('show');
+        }
+        else {
+            getall();
+            loginuser = '@ViewBag.User';
+        }
+        var topics="Logical Reasoning,Simplification,Reading Comprehension,Alphanumeric Series,Profit & Loss,Cloze Test"+
+        ",Ranking/Direction/Alphabet Test,Mixtures & Alligations,Para jumbles,Data Sufficiency,Simple Interest & Compound Interest,Surds & Indices,Coded Inequalities,Work & Time,Fill in the blanks,Seating Arrangement,Time & Distance,Multiple Meaning/Error Spotting,"+
+            "Puzzle,Mensuration – Cylinder Cone Sphere,Paragraph Completion,Tabulation Data Interpretation,Syllogism,Ratio &Proportion,Percentage,Blood Relations,Number Systems,Input Output,Sequence & Series,Coding Decoding,Permutation,Combination &Probability,Miscellaneous";
+        var appendliqntype = "";
+        $.each(topics.split(','), function (i, n) {
+            appendliqntype += '<option>' + n +'</option>';
+        })
+        $('#qntypefilter').append(appendliqntype);
+        $('#qntype').append(appendliqntype);
+    })
+    $('#postqnid').click(function () {
+        debugger
+        $('#postqnarea').val('');
+        $('#postimgqn').val('');
+        $('#postbtn').click();
+    })
+    $('#postqn').click(function () {
+        debugger
+        $('#ermsg').html('');
+        var qn = $('#postqnarea').val();
+        var topic = $('#qntype').val();
+        $('#loadercontainer').show();
+        $('.container').css('opacity', '0.5');
+        var file = $('#postimgqn').get(0).files[0];
+        if (file == null && qn == "" && $('.pastedimagecls').length==0) { alert('Please give your inputs'); $('#loadercontainer').hide(); $('.container').css('opacity', '1'); return false; }
+
+        if (topic == "--Select Qn Type--") { alert('Please select Question topic');return false; }
+
+        var fileData = new FormData();
+        fileData.append('UserEmail', loginuser);
+
+        if(cmntimgpastefile!=null) fileData.append("File", cmntimgpastefile);
+
+        if (file != null) {
+            fileData.append("File", file);
+        }
+        else {
+            fileData.append("Question", qn);
+        }
+        fileData.append("Topic", topic);
+        $.ajax({
+            url: '/QnA/SaveQuestion',
+            type: "POST",
+            contentType: false, // Not to set any content header
+            processData: false, // Not to process data
+            data: fileData,
+            success: function (data) {
+                if (data) {
+                   $('#postqnmodel').modal('toggle');
+                    $('#loadercontainer').hide();
+                    $('.container').css('opacity', '1');
+                    alert('posted!! Refresh to update!!');
+                }
+                else {
+                    $('#ermsg').html('Failed to Post!!');
+                    $('#loadercontainer').hide();
+                    $('.container').css('opacity', '1');
+                }
+                cmntimgpastefile=null;
+                $('.pastedimagecls').remove();
+            },
+            error: function (err) {
+                $('#loadercontainer').hide();
+                $('.container').css('opacity', '1');
+                alert(err.statusText);
+            }
+        });
+    })
+    var getall = function () {
+        $('#loadercontainer').show();
+        $('.container').css('opacity', '0.5');
+        $.post('/QnA/GetSolutions', function (data) {
+            qnslist = data.reverse();
+            debugger
+            if (data.length > 6) {
+                if($('#pagination').data("twbs-pagination"))
+                    $('#pagination').twbsPagination('destroy');
+                $('#pagination').twbsPagination({
+                    totalPages: Math.ceil(data.length / 6),
+                    visiblePages: 6,
+                    next: 'Next',
+                    prev: 'Prev',
+                    onPageClick: function (event, page) {
+                        debugger
+                        currentpage = page;
+                        var prevpage = page - 1;
+                        if (page * 6 <= qnslist.length)
+                            data = qnslist.slice(prevpage * 6, page * 6);
+                        else
+                            data = qnslist.slice(prevpage * 6, qnslist.length);
+                        addingqn(data);
+                    }
+                });
+                data = data.slice(0, 6);
+            }
+            addingqn(data);
+        })
+    }
+    var addingqn = function (data) {
+        $('#qna').html('');
+        $.each(data, function (i, n) {
+            debugger
+            var qn;
+            if (n.IsImage)
+                qn = '<div class="q" id="Q' + n.QuestionId + '"><div><span class="qno">Q' + n.QuestionId + ':</span><img class="qn iqn" src="' + n.Question + '"/><i class="pull-right fa fa-trash"></i><i class="pull-right fa fa-angle-double-down"></i><span class="usernamecmt">#' + n.UserEmail + '<br/>at '+n.PostCreated+'</span>&emsp;</div><div  id="QS' + n.QuestionId + '" class="sol"></div><hr />';
+            else
+                qn = '<div class="q" id="Q' + n.QuestionId + '"><div><span class="qno">Q' + n.QuestionId + ':</span><span class="qn">' + n.Question + '</span><i class="pull-right fa fa-trash"></i><i class="pull-right fa fa-angle-double-down"></i><span class="usernamecmt">#' + n.UserEmail + '<br/>at '+n.PostCreated+'</span>&emsp;</div><div  id="QS' + n.QuestionId + '" class="sol"></div><hr />';
+            $('#qna').append(qn);
+            if (n.Solutions.length > 0) {
+                debugger
+                $('#QS' + n.QuestionId).append("<h5 style='text-decoration:underline' >Solutions:</h5>");
+                $.each(n.Solutions, function (j, m) {
+                    if (m.SolutionImage == null) {
+                        var sol = '<span>' + m.Solutionstr + '</span><br /><span class="usernamecmt">By ' + m.By + '<br/>at ' + m.SolCreated + '</span><hr />';
+                        $('#QS' + n.QuestionId).append(sol);
+                    }
+                    else {
+                        var sol = '<span>' + m.Solutionstr + '</span><br /><img class="simg" src="' + m.SolutionImage + '" /> <span class="usernamecmt">By ' + m.By + '<br/>at ' + m.SolCreated + '</span><hr />';
+                        $('#QS' + n.QuestionId).append(sol);
+                    }
+                })
+            }
+            $('#QS' + n.QuestionId).append('<div id="IS' + n.QuestionId + '" ></div>');
+            $('#QS' + n.QuestionId).append('<textarea placeholder="Comments" class="solcom" rows="2" style="width:100%;max-width: 70%;"></textarea><input class="imgsol" type="file" style="display:inline" />&emsp;<span class="typetxt"></span><i class="fa fa-paper-plane"></i></div>');
+        })
+        $('#loadercontainer').hide();
+        $('.container').css('opacity', '1');
+    }
+
+    $('body').on('click', '.fa-trash', function () {
+        debugger
+        if(confirm("Are you sure?")){
+            var qid = this.closest('.q').id.split('Q')[1];
+            $.post('/QnA/DeleteQn', { qid: qid }, function (data) {
+                if (data) {
+                    $('#qna').find('#' + this.closest('.q').id).remove();
+                    alert('Deleted');
+                }
+                else {
+                    alert('Failed to Deleted');
+                }
+            })
+        }
+    })
+    $('body').on('click', '.fa-paper-plane', function () {
+        debugger
+        var imgurl;
+        var ele = this;
+        $('#loadercontainer').show();
+        $('.container').css('opacity', '0.5');
+        var file = $(ele.parentElement).find('.imgsol').get(0).files[0];
+        var solcom = $($(ele).closest('.sol')).find('.solcom')[0].value;
+        if (file == null && solcom == "" && $('.pastedimagecls').length==0) { alert('Please give your inputs'); $('#loadercontainer').hide(); $('.container').css('opacity', '1'); return false; }
+
+        if (file != null) imgurl = (window.URL ? URL : webkitURL).createObjectURL(file);
+        //var reader = new FileReader();
+        //reader.readAsDataURL(file);
+        //reader.onload = function (e) {
+        //    $('#blah').attr('src', e.target.result);
+        //}
+        // Create FormData object
+        var fileData = new FormData();
+        // Looping over all files and add it to FormData object
+        fileData.append(ele.closest('.q').id, file);
+        if(cmntimgpastefile!=null)
+            fileData.append('pastedimage', cmntimgpastefile);
+        // Adding one more key to FormData object
+        fileData.append('UserEmail', loginuser);
+        var qid = ele.closest('.q').id.split('Q')[1];
+        fileData.append("Qid", qid);
+        fileData.append("solstr", solcom);
+
+        $.ajax({
+            url: '/QnA/UpdateSolution',
+            type: "POST",
+            contentType: false, // Not to set any content header
+            processData: false, // Not to process data
+            data: fileData,
+            success: function (result) {
+                //if (file != null)
+                //    $('#IS' + qid).append('<span>' + solcom + '</span><br /><img class="simg" src="' + imgurl + '" /> By ' + loginuser + '<hr />');
+                //else
+                //    $('#IS' + qid).append('<span>' + solcom + '</span><br /><img class="simg" src="' + imgurl + '" /> By ' + loginuser + '<hr />');
+                //if ($(ele.parentElement).find('h5').length == 0) $('#IS' + qid).before("<h5 style='text-decoration:underline' >Solutions:</h5>");
+                $($(ele).closest('.sol')).find('.solcom')[0].value = "";
+                $(ele.parentElement).find('.imgsol')[0].value = "";
+                $('#loadercontainer').hide();
+                $('.container').css('opacity', '1');
+                $('.pastedimagecls').remove();
+                cmntimgpastefile=null;
+            },
+            error: function (err) {
+                $('#loadercontainer').hide();
+                $('.container').css('opacity', '1');
+                alert(err.statusText);
+            }
+        });
+    })
+    $('body').on('click', '.fa-angle-double-down', function () {
+        var solele = this.closest('div').nextElementSibling;
+        $(solele).show(500);
+        $(this).removeClass("fa-angle-double-down");
+        $(this).addClass("fa-angle-double-up");
+    })
+    $('body').on('click', '.fa-angle-double-up', function () {
+        var solele = this.closest('div').nextElementSibling;
+        $(solele).hide(500);
+        $(this).removeClass("fa-angle-double-up");
+        $(this).addClass("fa-angle-double-down");
+    })
+    $('#refresh').click(function () { getall(); });
+    $('body').on('click', '.iqn,.simg', function () {
+        debugger
+        var src = $(this).attr("src");
+        var ratio = Math.min($(window).width() / this.naturalWidth, $(window).height() / this.naturalHeight);
+        $("#download").attr("href", src);
+        $("#modelimage").html("<img width=" + (this.naturalWidth * ratio*0.95) + " height=" + (this.naturalHeight * ratio*0.92) + " src='" + src + "'/>");
+        $('#imagepop').click();
+    })
+    $('#login').click(function () {
+        $.post('/QnA/GetUser', { email: $('#LEmail').val(), pw: $('#passwordinput').val() }, function (data) {
+            if (data) {
+                getall();
+                $('#loginmodel').modal('toggle');
+                loginuser = $('#LEmail').val();
+            }
+            else {
+                $('#loginermsg').html('Failed to login!!');
+            }
+        })
+    })
+
+    $('#confirmsignup').click(function () {
+        debugger
+        if ($('#password').val() == "" || $('#reenterpassword').val() == "" || $('#LEmail') == "") { $('#loginermsg').html('Please fill all fields!!'); return false; }
+        if ($('#password').val() != $('#reenterpassword').val()) { $('#loginermsg').html('Password not match!!'); return false; }
+
+        $.post('/QnA/SaveUser', { email: $('#SEmail').val(), pw: $('#password').val() }, function (data) {
+            if (data) {
+                getall();
+                $('#loginmodel').modal('toggle');
+                loginuser = $('#SEmail').val();
+            }
+            else {
+                $('#loginmodel').modal('toggle');
+                $('#loginermsg').html('Failed to SignUp!!');
+            }
+        })
+    })
+
+    var loading = function () {
+        $('#loadercontainer').show();
+        $('.container').css('opacity', '0.5');
+    }
+    var stoploading=function(){
+        $('#loadercontainer').hide();
+        $('.container').css('opacity', '1');
+    }
+    $('body').on('keypress', '.solcom', function (e) {
+        if (e.which == 13) {
+           $($(this.parentElement).find('.fa-paper-plane')[0]).trigger('click');
+        }
+    });
+    var pushnotification = function (Qid,user) {
+        //$('.dropdown-menu').html('');
+        if (user != loginuser) {
+            if ($('#noticount')[0].innerText == "")
+                $('#noticount').html(1);
+            else
+                $('#noticount').html(1 + parseInt($('#noticount')[0].innerText));
+            var notihtml = '<li class="notification-box"><a id="N_' + Qid + '" class="notili"><span>'+user+' Commented on' + Qid + '</span></a></li>';
+            $('#notifooter').before(notihtml);
+        }
+    }
+    $('body').on('click', '.notili', function (e) {
+        debugger
+        var qid = this.id.split('N_')[1];
+        var id=qid.split('Q')[1];
+        data = $(qnslist).filter(function (i, n) { return n.QuestionId == id }).get();
+        addingqn(data);
+        $('#' + qid).find('.fa-angle-double-down').click();
+        $('html, body').animate({
+            scrollTop: $("#" + qid).offset().top
+        }, 500);
+    })
+    $('#noticlear').click(function () {
+        debugger
+        $($(this.closest('.dropdown-menu')).find('.notification-box')).remove();
+        $('#noticount').html("");
+    })
+
+    $("#rotate").click(function () {
+        debugger
+        $(this.closest('.modal-dialog')).find('img').toggleClass('flip');
+    })
+    $('#qntypefilter').change(function () {
+        debugger
+        var topic = this.value;
+        data = qnslist.filter(x => x.Topic == topic);
+        filterqnlist = data;
+        $('#pagination').twbsPagination('destroy');
+        if (data.length > 6) {
+            $('#pagination').twbsPagination({
+                totalPages: Math.ceil(data.length / 6),
+                visiblePages: 6,
+                next: 'Next',
+                prev: 'Prev',
+                onPageClick: function (event, page) {
+                    debugger
+                    currentpage = page;
+                    var prevpage = page - 1;
+                    if (page * 6 <= filterqnlist.length)
+                        data = filterqnlist.slice(prevpage * 6, page * 6);
+                    else
+                        data = filterqnlist.slice(prevpage * 6, filterqnlist.length);
+                    addingqn(data);
+                }
+            });
+            data = data.slice(0, 6);
+        }
+        addingqn(data);
+    })
+     $('.filter').click(function () {
+        debugger
+        var value = this.text; var data; var prevdate;
+        if (value == "Today") prevdate = calculateprevdate(0);
+        else if (value == "Yesterday") prevdate = calculateprevdate(1);
+        else if (value == "This Week") prevdate = calculateprevdate(7);
+        else if (value == "All") prevdate = new Date(0);
+        data = $(qnslist).filter(function (i, n) { return new Date(n.PostCreated) > new Date(prevdate) }).get();
+        filterqnlist = data;
+        $('#pagination').twbsPagination('destroy');
+        if (data.length > 6) {
+            $('#pagination').twbsPagination({
+                totalPages: Math.ceil(data.length / 6),
+                visiblePages: 6,
+                next: 'Next',
+                prev: 'Prev',
+                onPageClick: function (event, page) {
+                    debugger
+                    currentpage = page;
+                    var prevpage = page - 1;
+                    if (page * 6 <= filterqnlist.length)
+                        data = filterqnlist.slice(prevpage * 6, page * 6);
+                    else
+                        data = filterqnlist.slice(prevpage * 6, filterqnlist.length);
+                    addingqn(data);
+                }
+            });
+            data = data.slice(0, 6);
+        }
+        addingqn(data);
+    })
+    function calculateprevdate(days) {
+        var todayTimeStamp = +new Date(); // Unix timestamp in milliseconds
+        var oneDayTimeStamp =days*1000 * 60 * 60 * 24; // Milliseconds in a day
+        var diff = todayTimeStamp - oneDayTimeStamp;
+        var prev = new Date(diff);
+        var prevDayString = prev.getFullYear() + '/' + (prev.getMonth() + 1) + '/' + prev.getDate();
+        return prevDayString;
+    }
+</script>
+
+
+@section scripts {
+    <script src="~/Scripts/jquery.signalR-2.4.0.min.js"></script>
+    <script src="~/signalr/hubs"></script>
+    <script>
+        $(function () {
+            $(".solcom").focus(function () {
+                debugger
+                $(document).keyup(function (event) {
+
+                });
+            }).focusout(function () {
+
+            });
+            var chat = $.connection.chatHub;
+            chat.client.ReceiveComment = function (name, comment, qid, impath) {
+                debugger
+                var index = qnslist.findIndex((obj => obj.QuestionId == qid));
+                qnslist[index].Solutions.push({ "Solutionstr": comment, "SolutionImage": impath, "By": name })
+                if ($('#IS' + qid).length!= 0) {
+                    if (impath != null)
+                        $('#IS' + qid).append('<span>' + comment + '</span><br /><img class="simg" src="' + impath + '" /><span class="usernamecmt">By ' + name + '</span><hr />');
+                    else
+                        $('#IS' + qid).append('<span>' + comment + '</span><br /> <span class="usernamecmt">By ' + name + '</span><hr />');
+                    if ($($('#IS' + qid)[0].parentElement).find('h5').length == 0) $('#IS' + qid).before("<h5 style='text-decoration:underline' >Solutions:</h5>");
+                    $('#chatAudio')[0].play();
+                }
+                pushnotification("Q" + qid, name);
+            }
+            chat.client.DeleteQn = function (qid) {
+                debugger
+                if ($('#qna').find('#Q' + qid).length != 0)
+                    $('#qna').find('#Q' + qid).remove();
+                else
+                    qnslist.splice(qnslist.findIndex((x=>x.QuestionId == qid)), 1);
+
+            };
+            chat.client.PostedQn = function (useremail) {
+                if (useremail != loginuser) {
+                    if ($('#noticount')[0].innerText == "")
+                        $('#noticount').html(1);
+                    else
+                        $('#noticount').html(1 + parseInt($('#noticount')[0].innerText));
+                    var notihtml = '<li class="notification-box"><a class=""><span>Quested posted by '+useremail+'. Please refresh to update that</span></a></li>';
+                    $('#notifooter').before(notihtml);
+                }
+                $('#qnAudio')[0].play();
+            }
+
+            chat.client.Typereceive = function (typing, user, ele) {
+                if ($('#' + ele).find('.typetxt')[0] != null) {
+                    if (typing) {
+                        if (user != loginuser)
+                            $('#' + ele).find('.typetxt')[0].innerHTML = user + " is typing...";
+                    }
+                    else {
+                        $('#' + ele).find('.typetxt')[0].innerHTML = "";
+                    }
+                }
+
+            }
+            // Start the connection.
+            $.connection.hub.start().done(function () {
+                $('body').on('focus', '.solcom', function () {
+                    var pele = this.parentElement.id;
+                    $(document).keyup(function (event) {
+                        chat.server.typing(true, loginuser, pele);
+                     });
+                })
+                $('body').on('focusout', '.solcom', function () {
+                    var pele = this.parentElement.id;
+                    chat.server.typing(false,"",pele);
+
+                })
+            });
+        });
+
+    </script>
+}
+
+
+<script>
+    var pasteImage, cmntimgpastefile;
+      var PasteImage = function (el) {
+        this._el = el;
+        this._listenForPaste();
+      };
+      PasteImage.prototype._getURLObj = function () {
+        return window.URL || window.webkitURL;
+      };
+
+      PasteImage.prototype._pasteImage = function (image) {
+        this.emit('paste-image', image);
+      };
+
+      PasteImage.prototype._pasteImageSource = function (src) {
+        var self = this,
+         image = new Image();
+        image.className = "pastedimagecls";
+
+        image.onload = function () {
+          self._pasteImage(image);
+        };
+
+        image.src = src;
+      };
+      PasteImage.prototype._onPaste = function (e) {
+        // We need to check if event.clipboardData is supported (Chrome & IE)
+        if (e.clipboardData && e.clipboardData.items) {
+          // Get the items from the clipboard
+          var items = e.clipboardData.items;
+          // Loop through all items, looking for any kind of image
+          for (var i = 0; i < items.length; i++) {
+            if (items[i].type.indexOf('image') !== -1) {
+              // We need to represent the image as a file
+                var blob = items[i].getAsFile();
+                cmntimgpastefile = blob;
+              // Use a URL or webkitURL (whichever is available to the browser) to create a
+              // temporary URL to the object
+              var URLObj = this._getURLObj();
+              var source = URLObj.createObjectURL(blob);
+              // The URL can then be used as the source of an image
+              this._pasteImageSource(source);
+              // Prevent the image (or URL) from being pasted into the contenteditable element
+              e.preventDefault();
+            }
+          }
+        }
+      };
+      PasteImage.prototype._listenForPaste = function () {
+        var self = this;
+        self._origOnPaste = self._el.onpaste;
+        self._el.addEventListener('paste', function (e) {
+          self._onPaste(e);
+          // Preserve an existing onpaste event handler
+          if (self._origOnPaste) {
+            self._origOnPaste.apply(this, arguments);
+          }
+        });
+      };
+      // TODO: use EventEmitter instead
+      PasteImage.prototype.on = function (event, callback) {
+        this._callback = callback;
+      };
+      // TODO: use EventEmitter instead
+      PasteImage.prototype.emit = function (event, arg) {
+        this._callback(arg);
+      };
+    // -----
+      $('body').on('click', '.solcom', function () {
+          pasteImage = new PasteImage(this);
+          pasteImage.on('paste-image', function (image) {
+              this._el.before(image);
+          });
+      })
+       $('#postqnarea').click(function () {
+          pasteImage = new PasteImage(this);
+          pasteImage.on('paste-image', function (image) {
+              this._el.before(image);
+          });
+      })
+
+      function srcToFile(src, fileName, mimeType) {
+          return (fetch(src)
+              .then(function (res) { return res.arrayBuffer(); })
+              .then(function (buf) { return new File([buf], fileName, { type: mimeType }); })
+          );
+      }
+      function dataURItoBlob(dataURI) {
+          // convert base64/URLEncoded data component to raw binary data held in a string
+          var byteString;
+          if (dataURI.split(',')[0].indexOf('base64') >= 0)
+              byteString = atob(dataURI.split(',')[1]);
+          else
+              byteString = unescape(dataURI.split(',')[1]);
+
+          // separate out the mime component
+          var mimeString = dataURI.split(',')[0].split(':')[1].split(';')[0];
+
+          // write the bytes of the string to a typed array
+          var ia = new Uint8Array(byteString.length);
+          for (var i = 0; i < byteString.length; i++) {
+              ia[i] = byteString.charCodeAt(i);
+          }
+
+          return new Blob([ia], { type: mimeString });
+      }
+</script>
